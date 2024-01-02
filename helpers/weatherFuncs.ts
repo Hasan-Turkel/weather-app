@@ -1,8 +1,9 @@
-const API_KEY = process.env.API_KEY;
+"use server"
+const API_KEY = process.env.NEXT_PUBLIC_apiKey;
 
-export const getCityWeather = async (city:"london") => {
+export const getCityWeather = async (city:string) => {
     const URL = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`;
-    const res = await fetch(URL);
+    const res = await fetch(URL, {cache:"no-store"});
     
     if (!res.ok) {
       // This will activate the closest `error.js` Error Boundary

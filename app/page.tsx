@@ -1,17 +1,59 @@
-import Image from 'next/image'
-import { getCityWeather } from "@/helpers/weatherFuncs"
+"use client"
+import React, { useEffect, useState } from "react";
+import SearchBar from './SearchBar';
+import axios from "axios";
 
-export default async function Home() {
 
-  const city = "london"
-  const cityWeather = await getCityWeather(city);
+export default function Home() {
+
+  const [cityWeather, setWeather] = useState({
+
+    location:{
+      region:"",
+      country:""
+    },
+    current:{
+      temp_c:"",
+      feelslike_c:"",
+      humidity:"",
+      wind_kph:"",
+      condition:{
+        icon:"",
+        text:""
+      }
+    },
+    
+  })
+  
+  const getCityWeather = async (city:string) => {
+    const API_KEY = process.env.NEXT_PUBLIC_apiKey;
+    const URL = `https://api.weatherapi.com/v1/current.json?q=${city}&key=${API_KEY}`;
+    try {
+      
+      const { data } = await axios.get(URL);
+      // console.log(data);
+      setWeather(data)
+     
+    } catch (error:any) {
+      
+      console.log(error.message);
+    }
+    
+  }
+  let city = "london"
+  useEffect(() => {
+    getCityWeather(city);
+  }, []);
+  
+
+ 
 
   // console.log(cityWeather);
   
   return (
 
-  <main className='flex justify-center items-center h-screen'>
-    
+  <main className='flex flex-col justify-center items-center h-screen gap-3'>
+    <SearchBar getCityWeather={getCityWeather}/>
  <div className='min-w-80 w-1/2 p-2'>
   <h1 className='text-2xl font-bold'>{cityWeather.location.region}</h1>
   <h2 className='font-semibold'>{cityWeather.location.country}</h2>
@@ -21,7 +63,7 @@ export default async function Home() {
     <h1 className='text-2xl'>{cityWeather.current.temp_c}°C</h1>
     <p>Feels Like {cityWeather.current.feelslike_c}°C</p>
     </div>
-    <img src={cityWeather.current.condition.icon} alt="icon" />
+    <img src={cityWeather.current.condition.icon} alt="icon" width="100"/>
     <div>
       <p className='text-xl'>{cityWeather.current.condition.text}</p>
       <p>Humidity: %{cityWeather.current.humidity}</p>
