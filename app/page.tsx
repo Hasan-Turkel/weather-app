@@ -2,15 +2,18 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from './SearchBar';
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 
 export default function Home() {
 
+  const router = useRouter()
   const [cityWeather, setWeather] = useState({
 
     location:{
       region:"",
-      country:""
+      country:"",
+      name:""
     },
     current:{
       temp_c:"",
@@ -70,8 +73,13 @@ export default function Home() {
       <p>Wind: {cityWeather.current.wind_kph} kph</p>
     </div>
     </div>
-  
  </div>
+
+ <button className="bg-yellow-800 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" onClick={() => {
+        router.push(cityWeather.location.name);
+      }}>
+  See the Forecast
+</button>
  </main>
   )
 }
