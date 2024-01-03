@@ -41,7 +41,7 @@ const CityForecast: React.FC<CityForecastProps> = ({ params: { city } }) => {
     getCityWeather(city);
   }, []);
 
-  console.log(cityWeather);
+  // console.log(cityWeather);
 
   return (
     <>
